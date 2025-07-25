@@ -76,73 +76,27 @@
     </div>
 
     <script>
-        async function generateContent(topic) {
-            if (topic) {
-                // AI API 연결 placeholder (xAI나 OpenAI 키 넣어 사용)
-                // 예: const response = await fetch('https://api.x.ai/v1/chat/completions', { method: 'POST', headers: { 'Authorization': 'Bearer YOUR_API_KEY' }, body: JSON.stringify({ model: 'grok', messages: [{ role: 'user', content: `시니어 타겟 1분 쇼츠 대본 만들어: ${topic}` }] }) });
-                // const aiContent = await response.json().choices[0].message.content;
-                // document.getElementById('content-area').innerHTML = aiContent;
-
-                // 현재 템플릿 fallback (AI 연결 전)
-                var content = `
-                    <h2>${topic}에 대한 유튜브 쇼츠 대본 아이디어 (시니어 타겟, 1분 이내)</h2>
-                    <p><strong>오프닝 (0-10초):</strong> 안녕하세요, 시니어 여러분! 오늘 핫 트렌드 "${topic}"가 복지나 건강에 미칠 영향은? 1분 요약해요.</p>
-                    <p><strong>본문 (10-50초):</strong><br>
-                    - 배경: ${topic}의 간단 설명과 인기 이유 (예: 정책 변화나 건강 트렌드).<br>
-                    - 시니어 팁: 관련 복지 혜택이나 건강식품 (홍삼, 프로바이오틱스) 추천.<br>
-                    - 데이터: 인기 통계와 조회수 증가 이유.</p>
-                    <p><strong>엔딩 (50-60초):</strong> ${topic}로 더 나은 일상! 공유/구독 부탁드려요. 댓글 의견 기다려요!</p>
-                    <p><strong>팁:</strong> 네 트로트 BGM 넣고, TTS로 목소리. 해시태그: #${topic} #시니어건강 #복지뉴스</p>
-                `;
-                document.getElementById('content-area').innerHTML = content;
-            } else {
-                alert('주제를 입력해주세요!');
-            }
-        }
-
-        document.getElementById('generate-btn').addEventListener('click', function() {
-            var topic = document.getElementById('trend-input').value.trim();
-            generateContent(topic);
-        });
-
-        function setAndGenerate(topic) {
-            document.getElementById('trend-input').value = topic;
-            generateContent(topic);
-        }
-
-        async function loadTrends() {
-            try {
-                // 실시간: const response = await fetch('/.netlify/functions/get-trends');
-                // const trends = await response.json();
-                // fallback (최신 실시간 트렌드)
-                const trends = [
-                    {name: '#BOYS2PLANET', count: '87.6K tweets'},
-                    {name: '#스타쉽_상시모집철회_9기모집', count: '75.6K tweets'},
-                    {name: '#보이즈2플래닛', count: '69.8K tweets'},
-                    {name: '#여름하늘이_하오로_물든_날', count: '60.6K tweets'},
-                    {name: '#이준호솔로12주년축하해', count: '51.8K tweets'},
-                    {name: '#LEEJUNHO12THDAY', count: '50.7K tweets'},
-                    {name: '#25GoldenStarsForZhangHao', count: '48.1K tweets'},
-                    {name: '#NCTDREAM_CHILLER', count: '37.7K tweets'},
-                    {name: '#장하오', count: '34.0K tweets'},
-                    {name: '#건일아_생일축하햄', count: '20.0K tweets'}
-                ];
-                const box = document.getElementById('trends-box');
-                box.innerHTML = '<h2>현재 한국 X 핫 트렌드 (1~10위)</h2>';
-                trends.forEach((trend, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'trend-card';
-                    card.innerHTML = `
-                        <h3>${index + 1}. ${trend.name}</h3>
-                        <p>${trend.count}</p>
-                    `;
-                    card.onclick = () => setAndGenerate(trend.name);
-                    box.appendChild(card);
-                });
-            } catch (error) {
-                console.error('트렌드 로드 오류:', error);
-            }
-        }
+       async function loadTrends() {
+  try {
+    const response = await fetch('/.netlify/functions/get-trends');
+    const trends = await response.json();
+    const box = document.getElementById('trends-box');
+    box.innerHTML = '<h2>현재 한국 X 핫 트렌드 (1~10위)</h2>';
+    trends.forEach((trend, index) => {
+      const card = document.createElement('div');
+      card.className = 'trend-card';
+      card.innerHTML = `
+        <h3>${index + 1}. ${trend.name}</h3>
+        <p>${trend.count}</p>
+      `;
+      card.onclick = () => setAndGenerate(trend.name);
+      box.appendChild(card);
+    });
+  } catch (error) {
+    console.error('트렌드 로드 오류:', error);
+    document.getElementById('trends-box').innerHTML = '<p>트렌드 로드 실패. 나중에 다시 시도하세요.</p>';
+  }
+}
 
         window.addEventListener('load', loadTrends);
     </script>
