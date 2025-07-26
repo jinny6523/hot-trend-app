@@ -76,7 +76,7 @@
     </div>
 
     <script>
-       async function loadTrends() {
+      async function loadTrends() {
   try {
     const response = await fetch('/.netlify/functions/get-trends');
     const trends = await response.json();
