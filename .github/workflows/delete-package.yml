@@ -1,0 +1,12 @@
+name: Delete package.json
+on: workflow_dispatch
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: git rm package.json
+      - run: git commit -m "Remove root package.json"
+      - run: git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
