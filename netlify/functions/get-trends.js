@@ -1,3 +1,4 @@
+
 exports.handler = async (event, context) => {
   try {
     const response = await fetch('https://api.x.com/1.1/trends/place.json?id=23424868', {
@@ -19,3 +20,4 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
