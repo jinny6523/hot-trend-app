@@ -4,9 +4,15 @@ jobs:
   delete:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: git rm package.json
-      - run: git commit -m "Remove root package.json"
-      - run: git push
+      - uses: actions/checkout@v4
+      - name: Remove package.json
+        run: |
+          if [ -f package.json ]; then
+            git rm package.json
+            git commit -m "Remove root package.json"
+            git push
+          else
+            echo "package.json not found"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
