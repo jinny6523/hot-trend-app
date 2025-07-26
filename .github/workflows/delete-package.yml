@@ -10,9 +10,10 @@ jobs:
           if [ -f package.json ]; then
             git rm package.json
             git commit -m "Remove root package.json"
-            git push
+            git push origin main
           else
-            echo "package.json not found"
+            echo "package.json not found in root"
+            exit 1
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
